@@ -1,0 +1,13 @@
+<!--  наследуемся от шаблона default.html, который мы создавали ещё во времена flatpages -->
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+new
+{% endblock title %}
+
+{% block content %}
+<h4>{{ new.dateCreation|date:'d M Y, G:i' }}</h4>
+<h1>{{new.title}}. </h1>
+<hr>
+<h3>{{new.text}}</h3>
+{% endblock content %}
