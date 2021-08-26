@@ -39,11 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'fpages',
-    'simpleapp',
-
     'django.contrib.sites',
     'django.contrib.flatpages',
+
+    'fpages',
+    'simpleapp',
 
 
 ]

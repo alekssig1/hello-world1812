@@ -1,9 +1,14 @@
 from django.urls import path
-from .views import PostsList, PostDetail  # импортируем наше представление
+from .views import PostsList, PostDetail, PostDetailView, PostDeleteView, \
+                               SearchList, news_list
 
 urlpatterns = [
-    # path — означает путь. В данном случае путь ко всем товарам у нас останется пустым, позже станет ясно, почему
     path('', PostsList.as_view()),
-    # т. к. сам по себе это класс, то нам надо представить этот класс в виде view. Для этого вызываем метод as_view
-    path('<int:pk>', PostDetail.as_view()),  # pk — это первичный ключ товара, который будет выводиться у нас в шаблон
+    path('<int:pk>', PostDetail.as_view()),
+    path('<int:pk>/', PostDetail.as_view(), name='new'),
+    path('search', SearchList.as_view()),
+    path('news_list', news_list),
+
+    path('delete/<int:pk>', PostDeleteView.as_view(), name='news_delete'),
+    path('products/', PostsList.as_view()),
 ]
