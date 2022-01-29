@@ -1,9 +1,9 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, DeleteView
-from django.core.paginator import Paginator
+from django.views.generic import ListView, DetailView, DeleteView, CreateView
+# from django.core.paginator import Paginator
 from .models import Post
-from .filters import PostFilter, F, C, X
-
+from .filters import PostFilter
+from .forms import PostForm
 
 
 class PostsList(ListView):
@@ -11,6 +11,7 @@ class PostsList(ListView):
     template_name = 'news.html'
     context_object_name = 'news'
     paginate_by = 2
+    form_class = PostForm
 
 
 class SearchList(ListView):
@@ -18,7 +19,7 @@ class SearchList(ListView):
     template_name = 'news_list.html'
     context_object_name = 'news'
     paginate_by = 1
-
+    form_class = PostForm
 
     def get_filter(self):
         return PostFilter(self.request.GET, queryset=super().get_queryset())
@@ -30,9 +31,17 @@ class SearchList(ListView):
         return {
             **super().get_context_data(*args, **kwargs),
             "filter": self.get_filter(),
-
+            'form': PostForm()
 
         }
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)  # создаём новую форму, забиваем в неё данные из POST-запроса
+
+        if form.is_valid():
+            form.save()
+
+        return super().get(request, *args, **kwargs)
 
 
 class PostDetail(DetailView):
@@ -59,4 +68,7 @@ class PostDeleteView(DeleteView):
     success_url = '/products/'
 
 
-
+# дженерик для создания объекта.
+class PostCreateView(CreateView):
+    template_name = 'news_create.html'
+    form_class = PostForm

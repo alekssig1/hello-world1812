@@ -1,0 +1,33 @@
+{% extends 'flatpages/default.html' %}
+{% block title %} News {% endblock title %}
+
+{% block content %}
+
+<table>
+    <thead>
+    <tr>
+        <th>
+            Заголовок
+        </th>
+        <th>
+            Новость
+        </th>
+        <th>
+            Рейтинг
+        </th>
+    </tr>
+    </thead>
+    <tr>
+        <td>
+            {{ new.title }}
+        </td>
+        <td>
+            {{ new.text|truncatechars:10 }}
+        </td>
+        <td>
+            {{ new.rating }}
+        </td>
+    </tr>
+</table>
+
+{% endblock content %}

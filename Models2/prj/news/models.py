@@ -20,10 +20,16 @@ class Author(models.Model):
         self.ratingAuthor = pRat*3 + cRat
         self.save()
 
+    def __str__(self):
+        return f'{self.authorUser}'
+
 
 class Category(models.Model):
     name = models.CharField(max_length=64, unique=True)
-    pass
+    def __str__(self):
+        return f'{self.name}'
+
+
 
 
 class Post(models.Model):
@@ -57,12 +63,13 @@ class Post(models.Model):
         return f'{self.title} '
 
     def get_absolute_url(self):  # добавим абсолютный путь, чтобы после создания нас перебрасывало на страницу с товаром
-        return f'{self.id}'
+        return f'/{self.id}/'
 
 
 class PostCategory(models.Model):
     postThrough = models.ForeignKey(Post, on_delete=models.CASCADE)
     categoryThrough = models.ForeignKey(Category, on_delete=models.CASCADE)
+
 
 
 class Comment(models.Model):
