@@ -1,0 +1,21 @@
+from datetime import datetime
+from django.shortcuts import render, redirect
+from django.views import View
+from .models import Appointment
+
+
+class AppointmentView(View):
+    # получаем шаблон для ввода данных
+    def get(self, request, *args, **kwargs):
+        return render(request, 'make_appointment.html', {})
+
+    # отправляем на сервер нашу информацию и сохраняем в БД
+    def post(self, request, *args, **kwargs):
+        appointment = Appointment(
+            date=datetime.strptime(request.POST['date'], '%Y-%m-%d'),
+            client_name=request.POST['client_name'],
+            message=request.POST['message'],
+        )
+        appointment.save()
+
+        return redirect('appointments:make_appointment')

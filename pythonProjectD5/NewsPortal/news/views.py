@@ -1,4 +1,5 @@
 from django.views.generic import ListView, UpdateView, CreateView, DetailView, DeleteView
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.paginator import Paginator
 from django.shortcuts import render
 from .models import Post, Category
@@ -65,3 +66,15 @@ class PostDeleteView(DeleteView):
     context_object_name = 'new'
     queryset = Post.objects.all()
     success_url = '/news/'
+
+
+class AddNews(PermissionRequiredMixin, PostCreateView):
+    permission_required = ('news.add_post',)
+
+
+class ChangeNews(PermissionRequiredMixin, PostUpdateView):
+    permission_required = ('news.change_post',)
+
+
+class DeleteNews(PermissionRequiredMixin, PostDeleteView):
+    permission_required = ('news.delete_post',)

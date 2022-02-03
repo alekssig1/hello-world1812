@@ -44,14 +44,21 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    # ... include the providers you want to enable:
+
     'allauth.socialaccount.providers.google',
 
+    'appointments.apps.AppointmentConfig',
+
     'django_filters',
+    'django_apscheduler',
 
     'fpages',
     'news',
 ]
+
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+
+APSCHEDULER_RUN_NOW_TIMEOUT = 25
 
 LOGIN_URL = '/accounts/login/'
 
@@ -155,15 +162,28 @@ STATICFILES_DIRS = [
 
 AUTHENTICATION_BACKENDS = [
 
-    # Needed to login by username in Django admin, regardless of `allauth`
-    'django.contrib.auth.backends.ModelBackend',
 
-    # `allauth` specific authentication methods, such as login by e-mail
+    'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
+# !!!!!! Почта и пароли для образца.
+EMAIL_HOST = 'smtp.yandex.ru'  # адрес сервера Яндекс-почты для всех один и тот же
+EMAIL_PORT = 465  # порт smtp сервера тоже одинаковый
+EMAIL_HOST_USER = 'aleks'  # ваше имя пользователя,
+EMAIL_HOST_PASSWORD = 'FPCAc123'  # пароль от почты
+EMAIL_USE_SSL = True
 
-ACCOUNT_EMAIL_REQUIRED = False
-ACCOUNT_UNIQUE_EMAIL = False
+ADMINS = [
+    ('aleks', 'aleks@mail.ru'),
+
+]
+
+
+SERVER_EMAIL = 'aleks@yandex.ru'  # это будет у нас вместо аргумента FROM в массовой рассылке
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER+'@yandex.ru'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
