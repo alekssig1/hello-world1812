@@ -27,6 +27,8 @@ class Author(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=64, unique=True)
 
+    def __str__(self):
+        return f'{self.name}'
 
 class Post(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
@@ -58,6 +60,9 @@ class Post(models.Model):
 
     def __str__(self):
         return f'{self.title}'
+
+    def __str__(self):
+        return f'{self.postCategory}'
 
     def get_absolute_url(self):
         return f'/{self.id}/'

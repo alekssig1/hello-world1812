@@ -15,7 +15,7 @@ class PostList(ListView):
     # qeryset = Post.objects.order_by('-id')
     ordering = ['-dateCreation']
     paginate_by = 2
-    form_class = PostForm
+    #form_class = PostForm
 
                              #метод get_context_data нужен нам для того, чтобы мы могли передать переменные в шаблон.
     def get_context_data(self, **kwargs):
