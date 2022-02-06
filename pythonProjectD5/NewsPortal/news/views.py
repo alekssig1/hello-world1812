@@ -24,8 +24,8 @@ class PostList(ListView):
         context['time_now'] = datetime.utcnow()  # добавим переменную текущей даты time_now
         # context['value1'] = None  # добавим ещё одну пустую переменную
 
-        # context['categories'] = Category.objects.all()
-        # context['form'] = PostForm()
+        context['categories'] = Category.objects.all()
+        context['form'] = PostForm()
         return context
 
     # def post(self, request, *args, **kwargs):
