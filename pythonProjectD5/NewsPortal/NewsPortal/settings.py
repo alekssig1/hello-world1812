@@ -169,17 +169,17 @@ AUTHENTICATION_BACKENDS = [
 # !!!!!! Почта и пароли для образца.
 EMAIL_HOST = 'smtp.yandex.ru'  # адрес сервера Яндекс-почты для всех один и тот же
 EMAIL_PORT = 465  # порт smtp сервера тоже одинаковый
-EMAIL_HOST_USER = 'aleks'  # ваше имя пользователя,
-EMAIL_HOST_PASSWORD = 'FPCAc123'  # пароль от почты
+EMAIL_HOST_USER = 'alekssig1'  # ваше имя пользователя,
+EMAIL_HOST_PASSWORD = 'FPCAcba895'  # пароль от почты
 EMAIL_USE_SSL = True
 
 ADMINS = [
-    ('aleks', 'aleks@mail.ru'),
+    ('aleks', 'alekssig1@mail.ru'),
 
 ]
 
 
-SERVER_EMAIL = 'aleks@yandex.ru'  # это будет у нас вместо аргумента FROM в массовой рассылке
+SERVER_EMAIL = 'alekssig1@yandex.ru'  # это будет у нас вместо аргумента FROM в массовой рассылке
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER+'@yandex.ru'
 ACCOUNT_EMAIL_REQUIRED = True

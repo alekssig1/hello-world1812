@@ -26,13 +26,7 @@ class Author(models.Model):
 
 class Category(models.Model):
 
-    CATEGORY_CHOICES = (
-        ('Спорт','Спорт'),
-        ('Политика', 'Политика'),
-        ('Здоровье', 'Здоровье'),
-        ('Культура','Культура'),
-    )
-    name = models.CharField(max_length=64, choices=CATEGORY_CHOICES, default='Спорт')
+    name = models.CharField(max_length=64)
 
     def __str__(self):
         return f'{self.name}'
@@ -51,15 +45,15 @@ class Post(models.Model):
     categoryType = models.CharField(max_length=2, choices=CATEGORY_CHOICES, default=ARTICLE)
     dateCreation = models.DateTimeField(auto_now_add=True)
 
-    CATEGORY_CHOICES = (
-        ('Спорт', 'Спорт'),
-        ('Политика', 'Политика'),
-        ('Здоровье', 'Здоровье'),
-        ('Культура', 'Культура'),
-    )
-    postCategory = models.CharField(max_length=64, choices=CATEGORY_CHOICES, default='Спорт')
+    # CHOICES = (
+    #     ('Спорт', 'Спорт'),
+    #     ('Политика', 'Политика'),
+    #     ('Здоровье', 'Здоровье'),
+    #     ('Культура', 'Культура'),
+    # )
+    # category = models.CharField(max_length=64, choices=CHOICES, default='Спорт')
 
-    #postCategory = models.ManyToManyField(Category, through='PostCategory')
+    postCategory = models.ManyToManyField(Category, through='PostCategory')
     title = models.CharField(max_length=128)
     text = models.TextField()
     rating = models.SmallIntegerField(default=0)
@@ -80,6 +74,9 @@ class Post(models.Model):
 
     def __str__(self):
         return f'{self.postCategory}'
+
+    def __str__(self):
+        return f'{self.category}'
 
     def get_absolute_url(self):
         return f'/{self.id}/'

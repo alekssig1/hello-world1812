@@ -1,9 +1,10 @@
-from django_filters import FilterSet
+from django_filters import FilterSet, DateFromToRangeFilter
 from .models import Post
 
 
 class PostFilter(FilterSet):
+    # dateCreation = DateFromToRangeFilter()
 
     class Meta:
         model = Post
-        fields = ('author', 'title', 'postCategory', 'text',)
+        fields = ('author', 'title', 'postCategory')

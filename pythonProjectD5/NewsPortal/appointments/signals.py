@@ -5,7 +5,7 @@ from .models import Appointment
 
 
 @receiver(post_save, sender=Appointment)
-def notify_admins_appointments(sender, instance, created, **kwargs):
+def notify_admins_appointment(sender, instance, created, **kwargs):
 
     if created:
         subject = f'{instance.client_name} {instance.date.strftime("%d %m %Y")}'

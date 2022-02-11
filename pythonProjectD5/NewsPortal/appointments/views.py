@@ -6,16 +6,16 @@ from .models import Appointment
 
 class AppointmentView(View):
     # получаем шаблон для ввода данных
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         return render(request, 'make_appointment.html', {})
 
     # отправляем на сервер нашу информацию и сохраняем в БД
-    def post(self, request, *args, **kwargs):
-        appointment = Appointment(
+    def post(self, request):
+        appointments = Appointment(
             date=datetime.strptime(request.POST['date'], '%Y-%m-%d'),
             client_name=request.POST['client_name'],
             message=request.POST['message'],
         )
-        appointment.save()
+        appointments.save()
 
-        return redirect('appointments:make_appointment')
+        return redirect('make_appointment')
