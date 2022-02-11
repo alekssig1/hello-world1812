@@ -54,6 +54,8 @@ INSTALLED_APPS = [
 
     'fpages',
     'news',
+
+
 ]
 
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
@@ -73,7 +75,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware'
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+
+
 
 ]
 
@@ -91,7 +95,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
-                'django.template.context_processors.request',
+
             ],
 
             'libraries': {
@@ -100,7 +104,7 @@ TEMPLATES = [
         },
     },
 ]
-
+PAGINATION_DEFAULT_WINDOW=5
 WSGI_APPLICATION = 'NewsPortal.wsgi.application'
 
 
@@ -119,11 +123,14 @@ DATABASES = {
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    # },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+                    'min_length': 3,
+        }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -182,8 +189,8 @@ ADMINS = [
 SERVER_EMAIL = 'alekssig1@yandex.ru'  # это будет у нас вместо аргумента FROM в массовой рассылке
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER+'@yandex.ru'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_UNIQUE_EMAIL = False
 ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_VERIFICATION = 'none'

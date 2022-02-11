@@ -30,21 +30,40 @@ class PostList(ListView):
 
 
 class SearchList(ListView):
-    paginate_by = 2
-    model = Post
 
+    model = Post
     template_name = 'news_search.html'
     context_object_name = 'news'
-
     ordering = ['-dateCreation']
+    # paginate_by = 2
+
+    def get_filter(self):
+        return PostFilter(self.request.GET, queryset=super().get_queryset())
+
+    def get_queryset(self):
+        return self.get_filter().qs
+
+    def get_context_data(self, *args, **kwargs):
+        return {
+            **super().get_context_data(*args, **kwargs),
+            "filter": self.get_filter(),
+        }
 
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['filter'] = PostFilter(self.request.GET, queryset=self.get_queryset())
-                    #context['time_now'] = datetime.utcnow()  # добавим переменную текущей даты time_now
-
-        return context
+    # paginate_by = 2
+    # model = Post
+    #
+    # template_name = 'news_search.html'
+    # context_object_name = 'news'
+    #
+    # ordering = ['-dateCreation']
+    #
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['filter'] = PostFilter(self.request.GET, queryset=self.get_queryset())
+    #                 #context['time_now'] = datetime.utcnow()  # добавим переменную текущей даты time_now
+    #
+    #     return context
 
 
 class PostDetail(DetailView):

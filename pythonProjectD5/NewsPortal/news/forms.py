@@ -1,7 +1,6 @@
-from django.forms import ModelForm, MultipleChoiceField
+from django.forms import ModelForm
 from django.db import models
 from .models import Post, Category
-from django_filters import ModelChoiceFilter
 
 
 # Создаём модельную форму
