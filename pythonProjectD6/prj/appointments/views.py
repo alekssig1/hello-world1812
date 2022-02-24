@@ -18,4 +18,4 @@ class AppointmentView(View):
         )
         appointment.save()
 
-        return redirect('appointments:make_appointment')
+        return redirect('make_appointment')

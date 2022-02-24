@@ -54,6 +54,7 @@ INSTALLED_APPS = [
 
     'sign',
     'protect',
+    'board',
 ]
 
 LOGIN_URL = '/accounts/login/'
@@ -169,3 +170,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
 ACCOUNT_FORMS = {'signup': 'sign.models.BasicSignupForm'}
+
+# CELERY_BROKER_URL = 'redis://localhost:6379/0'
+# CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_BROKER_URL = 'redis://:qYuEsEMNkdOzRnS5pkkwLVS28y111yJl@redis-15160.c10.us-east-1-3.ec2.cloud.redislabs.com:15160/0'
+CELERY_RESULT_BACKEND = 'redis://:qYuEsEMNkdOzRnS5pkkwLVS28y111yJl@redis-15160.c10.us-east-1-3.ec2.cloud.redislabs.com:15160/0'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

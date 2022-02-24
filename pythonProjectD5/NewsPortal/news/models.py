@@ -28,6 +28,8 @@ class Category(models.Model):
 
     name = models.CharField(max_length=64)
 
+    subscribers = models.ManyToManyField(User, )
+
     def __str__(self):
         return f'{self.name}'
 
@@ -75,8 +77,6 @@ class Post(models.Model):
     def __str__(self):
         return f'{self.postCategory}'
 
-    def __str__(self):
-        return f'{self.category}'
 
     def get_absolute_url(self):
         return f'/{self.id}/'

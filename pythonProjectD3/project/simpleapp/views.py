@@ -75,3 +75,8 @@ class ProductDeleteView(DeleteView):
     template_name = 'product_delete.html'
     queryset = Product.objects.all()
     success_url = '/products/'
+
+
+
+
+

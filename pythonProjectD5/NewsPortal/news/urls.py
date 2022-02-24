@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import PostList, PostDetail, PostCreateView, PostUpdateView, PostDeleteView, AddNews, ChangeNews,\
-    DeleteNews, SearchList
-
+    DeleteNews, SearchList, subscribe_me
+from .signals import send_sub_mail
 
 urlpatterns = [
     path('', PostList.as_view()),
@@ -15,6 +15,11 @@ urlpatterns = [
     path('update/<int:pk>', ChangeNews.as_view(), name='news_update'),
     path('delete/<int:pk>', DeleteNews.as_view(), name='news_delete'),
 
+    path('subscribed/<int:pk>', subscribe_me, name='subscribed'),
 
+
+
+
+    #path('mmm', PostCreateView.as_view(), name='make_news'),
 ]
 

@@ -26,4 +26,5 @@ urlpatterns = [
     path('sign/', include('sign.urls')),
     path('accounts/', include('allauth.urls')),
 
+    path('board/', include('board.urls'))
     ]

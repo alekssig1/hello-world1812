@@ -49,11 +49,13 @@ INSTALLED_APPS = [
 
     'appointments.apps.AppointmentConfig',
 
+    'news.apps.NewsConfig',
+
     'django_filters',
     'django_apscheduler',
 
     'fpages',
-    'news',
+    #'news',
 
 
 ]
@@ -104,7 +106,7 @@ TEMPLATES = [
         },
     },
 ]
-PAGINATION_DEFAULT_WINDOW=5
+
 WSGI_APPLICATION = 'NewsPortal.wsgi.application'
 
 
@@ -173,6 +175,7 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
+
 # !!!!!! Почта и пароли для образца.
 EMAIL_HOST = 'smtp.yandex.ru'  # адрес сервера Яндекс-почты для всех один и тот же
 EMAIL_PORT = 465  # порт smtp сервера тоже одинаковый
@@ -196,3 +199,11 @@ ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 ACCOUNT_FORMS = {'signup': 'sign.models.BasicSignupForm'}
+
+# CELERY_BROKER_URL = 'redis://localhost:6379/0'
+# CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_BROKER_URL = 'redis://:qYuEsEMNkdOzRnS5pkkwLVS28y111yJl@redis-15160.c10.us-east-1-3.ec2.cloud.redislabs.com:15160/0'
+CELERY_RESULT_BACKEND = 'redis://:qYuEsEMNkdOzRnS5pkkwLVS28y111yJl@redis-15160.c10.us-east-1-3.ec2.cloud.redislabs.com:15160/0'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
