@@ -1,18 +1,18 @@
 from django.views.generic import ListView, UpdateView, CreateView, DetailView, DeleteView
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.paginator import Paginator
-from django.shortcuts import render
 from .models import Post, Category
 from .filters import PostFilter
-from datetime import datetime
 from .forms import PostForm
 
+from django.utils import timezone
+from datetime import datetime, timedelta
+
+from django.shortcuts import render
 from django.shortcuts import redirect
-
-
 from django.contrib.auth.models import User
-
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 
 
 class PostList(ListView):
@@ -178,53 +178,6 @@ def subscribe_me(request, pk):
 
         return redirect('/news/')
 
-
-# функция рассылки писем при добавлении новой статьи
-# def send_mail_for_sub(instance):
-#
-#     sub_text = instance.text
-#     # получаем нужный объект модели Категория через рк Пост
-#     category = Category.objects.get(pk=Post.objects.get(pk=instance.pk).category.pk)
-#
-#     subscribers = category.subscribers.all()
-#
-#
-#     for qaz in subscribers:
-#         print(qaz.email)
-#
-#
-#     for subscriber in subscribers:
-#
-#         html_content = render_to_string(
-#             'mail.html', {'user': subscriber, 'text': sub_text[:50], 'post': instance})
-#
-#         sub_username = subscriber.username
-#         sub_useremail = subscriber.email
-
-        # msg = EmailMultiAlternatives(
-        #     subject=f'Здравствуй, {subscriber.username}. Новая статья в вашем разделе!',
-        #     from_email='factoryskill@yandex.ru',
-        #     to=[subscriber.email]
-        # )
-        #
-        # msg.attach_alternative(html_content, 'text/html')
-
-        # # для удобства вывода инфы в консоль
-        # print()
-        # print(html_content)
-        # print()
-
-        # фукнция для таски, передаем в нее все что нужно для отправки подписчикам письма
-        # send_mail_for_sub_once.delay(sub_username, sub_useremail, html_content)
-
-        # код ниже временно заблокирован, чтоб пока в процессе отладки не производилась реальная рассылка писем
-        # msg.send()
-    #
-    # print('Представления - конец')
-    #
-    # return redirect('/news/')
-
-
 #name1 = Post.objects.get(title='Путин поручил Медведеву новую работу в Совбезе')
 #print(name1)
 # category_new = Post.objects.get(id='17').postCategory.all()[0]
@@ -236,8 +189,38 @@ def subscribe_me(request, pk):
 # print(a)
 # for i in a:
 #     print(i.author, '_____________________', i.title)
-#
-# aa = Post.objects.all().values()
-# for i in aa:
-#     print(i)
+def news_mail():
+
+    for category in Category.objects.all():
+        print(category)
+
+
+        week_news = Post.objects.filter(dateCreation__range = [datetime.now(tz=timezone.utc) - timedelta(days=14),
+                                                               datetime.now(tz=timezone.utc)], postCategory=category)
+
+        # news_from_each_category = []
+
+        for subscriber in category.subscribers.all().distinct():
+            print(subscriber.username, '_______________', subscriber.email)
+            url = ''
+            for week_new in week_news:
+                # url += f'{week_new.get_absolute_url}, '
+                print(week_new.title)
+
+                url += (f'http://127.0.0.1:8000/news/{week_new.id}, ')
+
+                # news_from_each_category.append(url)
+                print(url)
+
+            send_mail(
+                subject=f'News in the week!',
+                message=f'Новости в категории {category} за неделю: {url}',
+
+                from_email=None,
+                recipient_list=[subscriber.email, ]
+            )
+
+
+# news_mail()
+
 

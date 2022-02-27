@@ -4,7 +4,7 @@ from django.core.mail import mail_admins
 from .models import Appointment
 
 
-@receiver(post_save, sender=Appointment)
+# @receiver(post_save, sender=Appointment)
 def notify_admins_appointment(sender, instance, created, **kwargs):
 
     if created:
