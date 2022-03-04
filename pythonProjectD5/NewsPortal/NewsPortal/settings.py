@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-hkyi_3^p*ize%)g_iu-nl3*ygoy8)qxx34l$=^fhisw8wy%z_0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+#ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     'django_apscheduler',
 
     'fpages',
-    #'news',
+
 
 
 ]
@@ -65,6 +65,7 @@ APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 APSCHEDULER_RUN_NOW_TIMEOUT = 5
 
 LOGIN_URL = '/accounts/login/'
+# LOGIN_REDIRECT_URL = '/news/'
 
 SITE_ID = 1
 
@@ -125,9 +126,9 @@ DATABASES = {
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    # },
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
         'OPTIONS': {
@@ -182,6 +183,7 @@ EMAIL_HOST = 'smtp.yandex.ru'  # адрес сервера Яндекс-почт
 EMAIL_PORT = 465  # порт smtp сервера тоже одинаковый
 EMAIL_HOST_USER = 'alekssig1'  # ваше имя пользователя,
 EMAIL_HOST_PASSWORD = 'FPCAcba895'  # пароль от почты
+
 EMAIL_USE_SSL = True
 
 ADMINS = [
@@ -193,18 +195,22 @@ ADMINS = [
 SERVER_EMAIL = 'alekssig1@yandex.ru'  # это будет у нас вместо аргумента FROM в массовой рассылке
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER+'@yandex.ru'
-ACCOUNT_EMAIL_REQUIRED = False
-ACCOUNT_UNIQUE_EMAIL = False
-ACCOUNT_USERNAME_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = 'username'
-ACCOUNT_EMAIL_VERIFICATION = 'Mandatory'
+
+ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_UNIQUE_EMAIL = True
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 ACCOUNT_FORMS = {'signup': 'sign.models.BasicSignupForm'}
-
-# CELERY_BROKER_URL = 'redis://localhost:6379/0'
-# CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+# #
+# CELERY_BROKER_URL = 'redis://localhost:6379'
+# CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 CELERY_BROKER_URL = 'redis://:qYuEsEMNkdOzRnS5pkkwLVS28y111yJl@redis-15160.c10.us-east-1-3.ec2.cloud.redislabs.com:15160/0'
 CELERY_RESULT_BACKEND = 'redis://:qYuEsEMNkdOzRnS5pkkwLVS28y111yJl@redis-15160.c10.us-east-1-3.ec2.cloud.redislabs.com:15160/0'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+

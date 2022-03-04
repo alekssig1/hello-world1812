@@ -14,28 +14,24 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 
+import random
+import time
+
 
 class PostList(ListView):
 
     model = Post  # указываем модель, объекты которой мы будем выводить
-    template_name = 'news.html'  # указываем имя шаблона, в котором будет лежать HTML,
-    context_object_name = 'news'  # это имя списка,
-    # qeryset = Post.objects.order_by('-id')
+    template_name = 'news.html'
+    context_object_name = 'news'
+
     ordering = ['-dateCreation']
     paginate_by = 2
-                #form_class = PostForm
 
-                             #метод get_context_data нужен нам для того, чтобы мы могли передать переменные в шаблон.
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['filter'] = PostFilter(self.request.GET, queryset=self.get_queryset())
-                    #context['time_now'] = datetime.utcnow()  # добавим переменную текущей даты time_now
 
-        #context['categories']: Category.objects.all()
-                    #context['form'] = PostForm()
         return context
-
-
 
 
 class SearchList(ListView):
@@ -59,27 +55,127 @@ class SearchList(ListView):
             }
 
 
-    # paginate_by = 2
-    # model = Post
-    #
-    # template_name = 'news_search.html'
-    # context_object_name = 'news'
-    #
-    # ordering = ['-dateCreation']
-    #
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['filter'] = PostFilter(self.request.GET, queryset=self.get_queryset())
-    #                 #context['time_now'] = datetime.utcnow()  # добавим переменную текущей даты time_now
-    #
-    #     return context
-
-
 class PostDetail(DetailView):
     model = Post          # новость полностью
     template_name = 'new.html'
     context_object_name = 'news'
     success_url = '/news/'
+
+
+class PostCreateView(CreateView):        # создание
+    template_name = 'news_create.html'
+    form_class = PostForm
+    success_url = '/news/'
+
+    def get_object(self, *args, **kwargs):
+        obj = cache.get(f'product-{self.kwargs["pk"]}', None)
+
+        if not obj:
+            obj = super().get_object(*args, **kwargs)
+            cache.set(f'product-{self.kwargs["pk"]}', obj)
+            print(cache.set(f'product-{self.kwargs["pk"]}', obj))
+        return obj
+
+
+class PostUpdateView(UpdateView):         # редактирование
+    template_name = 'news_update.html'
+    form_class = PostForm
+    success_url = '/news/'
+
+    def get_object(self, **kwargs):
+        id = self.kwargs.get('pk')
+        return Post.objects.get(pk=id)
+
+
+class PostDeleteView(DeleteView):           # удалениe
+    template_name = 'news_delete.html'
+    context_object_name = 'new'
+    queryset = Post.objects.all()
+    success_url = '/news/'
+
+
+class AddNews(PermissionRequiredMixin, PostCreateView):           # доступ
+    permission_required = ('news.add_post',)
+
+
+class ChangeNews(PermissionRequiredMixin, PostUpdateView):
+    permission_required = ('news.change_post',)
+
+
+class DeleteNews(PermissionRequiredMixin, PostDeleteView):
+    permission_required = ('news.delete_post',)
+
+
+@login_required
+def subscribe_me(request, pk):                             # подписка, Отписка
+
+    user = request.user
+
+    my_category = Category.objects.get(id=pk)
+
+    sub_user = User.objects.get(id=user.pk)
+
+    if my_category.subscribers.filter(id=user.pk):
+        my_category.subscribers.remove(sub_user)
+
+        return redirect('/news/')
+    else:
+        my_category.subscribers.add(sub_user)
+
+        return redirect('/news/')
+
+
+def news_mail():                                               # Celery, apscheduler
+
+    now = datetime.now(tz=timezone.utc)
+    for category in Category.objects.all():
+        print(Category.objects.all())
+
+        print('----------------------------', category)
+
+        week_news = Post.objects.filter(dateCreation__range=[now - timedelta(days=14), now], postCategory=category)
+
+        for subscriber in category.subscribers.all():
+
+            if subscriber.email:
+
+                url = ''
+                delta_sec = 7
+                for week_new in week_news:
+
+                    url += f'http://127.0.0.1:8000/news/{week_new.id}, '
+
+                    print(subscriber, '_______________', subscriber.email, url)
+
+                delta_sec += random.randint(10, 20)                                 # чтобы не приняли за спам
+                subject = f'News in the week!'
+                message = f'{subscriber.username} Новости в категории {category} за неделю: {url}'
+                time.sleep(delta_sec)                                               # тормозим отправку на разное время
+                send_mail(
+                    subject=subject,
+                    message=message,
+                    from_email=None,
+                    recipient_list=[subscriber.email],
+
+                 )
+
+
+
+
+
+
+#name1 = Post.objects.get(title='Путин поручил Медведеву новую работу в Совбезе')
+#print(name1)
+# category_new = Post.objects.get(id='17').postCategory.all()[0]
+#
+#
+# print(category_new)
+#
+# a = Post.objects.filter(postCategory__name='Спорт')
+# print(a)
+# for i in a:
+#     print(i.author, '_____________________', i.title)
+
 
     # doc = Post.objects.get(pk=1)
     # p = doc.postCategory.all()
@@ -106,121 +202,3 @@ class PostDetail(DetailView):
 # doc = Post.objects.get(pk=1)
     # p = doc.postCategory.all()
     # print(p)
-
-
-class PostCreateView(CreateView):        # создание
-    template_name = 'news_create.html'
-    form_class = PostForm
-    success_url = '/news/'
-
-
-class PostUpdateView(UpdateView):         # редактирование
-    template_name = 'news_update.html'
-    form_class = PostForm
-    success_url = '/news/'
-
-    def get_object(self, **kwargs):
-        id = self.kwargs.get('pk')
-        return Post.objects.get(pk=id)
-
-
-class PostDeleteView(DeleteView):           # удалениe
-    template_name = 'news_delete.html'
-    context_object_name = 'new'
-    queryset = Post.objects.all()
-    success_url = '/news/'
-
-
-class AddNews(PermissionRequiredMixin, PostCreateView):
-    permission_required = ('news.add_post',)
-
-
-class ChangeNews(PermissionRequiredMixin, PostUpdateView):
-    permission_required = ('news.change_post',)
-
-
-class DeleteNews(PermissionRequiredMixin, PostDeleteView):
-    permission_required = ('news.delete_post',)
-
-
-@login_required
-def subscribe_me(request, pk):
-    print(pk)
-
-    user = request.user
-
-    print(user)
-
-    my_category = Category.objects.get(id=pk)
-
-    print(my_category)
-
-    sub_user = User.objects.get(id=user.pk)
-
-    print(sub_user)
-
-    print(my_category.subscribers.filter(id=user.pk))
-
-    id = user.pk
-    print(id)
-
-    if my_category.subscribers.filter(id=user.pk):
-        my_category.subscribers.remove(sub_user)
-        print(my_category.subscribers)
-        print(sub_user, id)
-
-        return redirect('/news/')
-    else:
-        my_category.subscribers.add(sub_user)
-        print('Пользователь', request.user, 'добавлен в подписчики категории:', Category.objects.get(pk=pk))
-        print(my_category.subscribers)
-        print(sub_user)
-
-        return redirect('/news/')
-
-#name1 = Post.objects.get(title='Путин поручил Медведеву новую работу в Совбезе')
-#print(name1)
-# category_new = Post.objects.get(id='17').postCategory.all()[0]
-#
-#
-# print(category_new)
-#
-# a = Post.objects.filter(postCategory__name='Спорт')
-# print(a)
-# for i in a:
-#     print(i.author, '_____________________', i.title)
-def news_mail():
-
-    for category in Category.objects.all():
-        print(category)
-
-
-        week_news = Post.objects.filter(dateCreation__range = [datetime.now(tz=timezone.utc) - timedelta(days=14),
-                                                               datetime.now(tz=timezone.utc)], postCategory=category)
-
-        # news_from_each_category = []
-
-        for subscriber in category.subscribers.all().distinct():
-            print(subscriber.username, '_______________', subscriber.email)
-            url = ''
-            for week_new in week_news:
-                # url += f'{week_new.get_absolute_url}, '
-                print(week_new.title)
-
-                url += (f'http://127.0.0.1:8000/news/{week_new.id}, ')
-
-                # news_from_each_category.append(url)
-                print(url)
-
-            send_mail(
-                subject=f'News in the week!',
-                message=f'Новости в категории {category} за неделю: {url}',
-
-                from_email=None,
-                recipient_list=[subscriber.email, ]
-            )
-
-
-# news_mail()
-
-

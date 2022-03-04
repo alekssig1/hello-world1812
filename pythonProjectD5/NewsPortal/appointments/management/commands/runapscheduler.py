@@ -21,10 +21,10 @@ def my_job():
     news_mail()
 
 
-
 def delete_old_job_executions(max_age=604_800):
     """This job deletes all apscheduler job executions older than `max_age` from the database."""
     DjangoJobExecution.objects.delete_old_job_executions(max_age)
+
 
 class Command(BaseCommand):
     help = "Runs apscheduler."
@@ -36,8 +36,8 @@ class Command(BaseCommand):
         # добавляем работу нашему задачнику
         scheduler.add_job(
             my_job,
-            trigger=CronTrigger(minute="*/1"),
-            # То же, что и интервал, но задача тригера таким образом более понятна django
+            # trigger=CronTrigger(minute="*/1"),                                проверка работы
+            trigger=CronTrigger(day_of_week="mon", hour="00", minute="00"),
             id="my_job",  # уникальный айди
             max_instances=1,
             replace_existing=True,

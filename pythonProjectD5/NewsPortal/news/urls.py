@@ -18,6 +18,5 @@ urlpatterns = [
 
     path('subscribed/<int:pk>', subscribe_me, name='subscribed'),
 
-
 ]
 

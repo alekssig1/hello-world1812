@@ -7,7 +7,6 @@ class Author(models.Model):
     authorUser = models.OneToOneField(User, on_delete=models.CASCADE)
     ratingAuthor = models.IntegerField(default=0)
 
-
     def update_rating(self):
         postRat = self.post_set.all().aggregate(postRating=Sum('rating'))
         pRat = 0
@@ -47,14 +46,6 @@ class Post(models.Model):
     categoryType = models.CharField(max_length=2, choices=CATEGORY_CHOICES, default=ARTICLE)
     dateCreation = models.DateTimeField(auto_now_add=True)
 
-    # CHOICES = (
-    #     ('Спорт', 'Спорт'),
-    #     ('Политика', 'Политика'),
-    #     ('Здоровье', 'Здоровье'),
-    #     ('Культура', 'Культура'),
-    # )
-    # category = models.CharField(max_length=64, choices=CHOICES, default='Спорт')
-
     postCategory = models.ManyToManyField(Category, through='PostCategory')
     title = models.CharField(max_length=128)
     text = models.TextField()
@@ -68,23 +59,17 @@ class Post(models.Model):
         self.rating -= 1
         self.save()
 
-    # def preview(self):
-    #     return self.text[0:128] + '...'
-
     def __str__(self):
         return f'{self.title}'
-
-    def __str__(self):
-        return f'{self.postCategory}'
-
-
-    def get_absolute_url(self):
-        return f'/{self.id}/'
+    # def get_absolute_url(self):
 
 
 class PostCategory(models.Model):
     postThrough = models.ForeignKey(Post, on_delete=models.CASCADE)
     categoryThrough = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.categoryThrough}'
 
 
 class Comment(models.Model):
