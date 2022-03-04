@@ -65,7 +65,7 @@ APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 APSCHEDULER_RUN_NOW_TIMEOUT = 5
 
 LOGIN_URL = '/accounts/login/'
-# LOGIN_REDIRECT_URL = '/news/'
+LOGIN_REDIRECT_URL = '/news/'
 
 SITE_ID = 1
 

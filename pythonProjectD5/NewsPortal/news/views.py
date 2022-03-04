@@ -67,15 +67,6 @@ class PostCreateView(CreateView):        # создание
     form_class = PostForm
     success_url = '/news/'
 
-    def get_object(self, *args, **kwargs):
-        obj = cache.get(f'product-{self.kwargs["pk"]}', None)
-
-        if not obj:
-            obj = super().get_object(*args, **kwargs)
-            cache.set(f'product-{self.kwargs["pk"]}', obj)
-            print(cache.set(f'product-{self.kwargs["pk"]}', obj))
-        return obj
-
 
 class PostUpdateView(UpdateView):         # редактирование
     template_name = 'news_update.html'
