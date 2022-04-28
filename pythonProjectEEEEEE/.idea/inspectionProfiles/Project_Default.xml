@@ -1,0 +1,29 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPep8NamingInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="N806" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="false" level="WARNING" enabled_by_default="false">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="django.db.models.fields.related.OneToOneField.comment_set" />
+          <option value="prj.news.models.Author.post_set" />
+          <option value="django.db.models.fields.CharField.title" />
+          <option value="project.simpleapp.models.Product.id" />
+          <option value="project.simpleapp.models.Product.objects" />
+          <option value="NewsPortal.news.models.Author.post_set" />
+          <option value="prj.news.models.Post.objects" />
+          <option value="NewsPortal.news.models.Post.objects" />
+          <option value="NewsPortal.news.models.Category.objects" />
+          <option value="NewsPortal.news.models.Post.id" />
+          <option value="NewsPortal.appointments.apps.appointments" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
